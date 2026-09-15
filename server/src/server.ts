@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import { connectDB } from "./infrastructure/database/pool.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import sessionsRoutes from "./modules/sessions/routes.js";
 import documentsRoutes from "./modules/ingestion/routes.js";
@@ -11,6 +12,7 @@ import agentRoutes from "./modules/agents/routes.js";
 const app = express();
 app.use(cors());
 app.use(express.json());
+connectDB()
 app.get("/api/health", (_req, res) => res.status(200).json({ status: "ok" }));
 app.use("/api/sessions", sessionsRoutes);
 app.use("/api/documents", documentsRoutes);

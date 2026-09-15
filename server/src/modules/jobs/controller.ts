@@ -1,6 +1,6 @@
 // job.controller.ts
 import { Request, Response, NextFunction } from "express";
-import { pool } from "../../infrastructure/database/pool.js";
+import { getPool } from "../../infrastructure/database/pool.js";
 import { extractRequirements } from "./extractRequiremnts.js";
 import { jobRepository } from "./repository.js";
 
@@ -11,6 +11,9 @@ export async function analyzeJobController(
   next: NextFunction,
 ) {
   try {
+    const pool = await getPool();
+    
+
     const { sessionId, jobDescription } = req.body as {
       sessionId?: string;
       jobDescription?: string;

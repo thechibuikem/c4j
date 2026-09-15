@@ -1,6 +1,6 @@
 // document.controller.ts
 import { Request, Response, NextFunction } from "express";
-import { pool } from "../../infrastructure/database/pool.js";
+import { getPool } from "../../infrastructure/database/pool.js";
 import { ingestDocument } from "./services/ingestdocument.js";
 // 
 export async function uploadDocumentController(
@@ -40,6 +40,9 @@ export async function getChunksController(
   next: NextFunction,
 ) {
   try {
+    const pool = await getPool();
+    
+
     const { rows } = await pool.query(
       `SELECT id, content, section, type, company, role, project, date, technology FROM chunks WHERE document_id = $1`,
       [req.params.documentId],

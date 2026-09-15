@@ -1,8 +1,13 @@
-import { pool } from "../../infrastructure/database/pool.js";
+import { getPool } from "../../infrastructure/database/pool.js";
 import type { JobRequirement } from "../../../../shared/types/index.js";
 
+
 export const agentRepository = {
+  
   async getSessionDocumentId(sessionId: string): Promise<string | null> {
+    const pool = await getPool();
+    
+
     const { rows } = await pool.query(
       "SELECT document_id FROM sessions WHERE id = $1",
       [sessionId],
@@ -11,6 +16,9 @@ export const agentRepository = {
   },
 
   async getJobRequirements(sessionId: string): Promise<JobRequirement[]> {
+    const pool = await getPool();
+    
+
     const { rows } = await pool.query<JobRequirement>(
       "SELECT id, text, category, importance FROM job_requirements WHERE session_id = $1",
       [sessionId],
@@ -19,6 +27,10 @@ export const agentRepository = {
   },
 
   async getChunks(documentId: string) {
+    const pool = await getPool();
+    
+
+
     const { rows } = await pool.query(
       "SELECT id, content, section FROM chunks WHERE document_id = $1",
       [documentId],
@@ -30,6 +42,9 @@ export const agentRepository = {
     sessionId: string,
     prosemirrorJSON: Record<string, unknown>,
   ): Promise<void> {
+    const pool = await getPool();
+    
+
     await pool.query(
       "UPDATE sessions SET current_document = $1 WHERE id = $2",
       [JSON.stringify(prosemirrorJSON), sessionId],

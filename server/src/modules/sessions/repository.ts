@@ -1,7 +1,8 @@
-import { pool } from "../../infrastructure/database/pool.js";
+import { getPool } from "../../infrastructure/database/pool.js";
 
 export const sessionsRepository = {
   async create() {
+    const pool = await getPool();
     const { rows } = await pool.query(
       "INSERT INTO sessions DEFAULT VALUES RETURNING id, created_at",
     );
@@ -9,6 +10,9 @@ export const sessionsRepository = {
   },
 
   async findById(sessionId: string) {
+    const pool = await getPool();
+    
+
     const { rows } = await pool.query(
       "SELECT id, document_id, current_document, created_at FROM sessions WHERE id = $1",
       [sessionId],
@@ -20,6 +24,10 @@ export const sessionsRepository = {
     sessionId: string,
     document: Record<string, unknown>,
   ): Promise<boolean> {
+
+    const pool = await getPool();
+    
+
     const { rows } = await pool.query(
       "UPDATE sessions SET current_document = $1 WHERE id = $2 RETURNING id",
       [JSON.stringify(document), sessionId],

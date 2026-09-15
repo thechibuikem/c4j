@@ -1,8 +1,10 @@
-import { pool } from "../../infrastructure/database/pool.js";
+import { getPool } from "../../infrastructure/database/pool.js";
 import type { JobRequirement } from "../../../../shared/types/index.js";
 
 export const retrievalRepository = {
   async getSessionDocumentId(sessionId: string): Promise<string | null> {
+    const pool = await getPool();
+    
     const { rows } = await pool.query(
       "SELECT document_id FROM sessions WHERE id = $1",
       [sessionId],
@@ -11,6 +13,9 @@ export const retrievalRepository = {
   },
 
   async getJobRequirements(sessionId: string): Promise<JobRequirement[]> {
+    const pool = await getPool();
+    
+
     const { rows } = await pool.query<JobRequirement>(
       "SELECT id, text, category, importance FROM job_requirements WHERE session_id = $1",
       [sessionId],
@@ -23,6 +28,9 @@ export const retrievalRepository = {
     embedding: number[],
     topK: number,
   ) {
+    const pool = await getPool();
+    
+
     const { rows } = await pool.query(
       `SELECT id, content, section, type, company, role, project, date, technology, (embedding <=> $1) AS distance
        FROM chunks WHERE document_id = $2 ORDER BY distance ASC LIMIT $3`,

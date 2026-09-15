@@ -1,5 +1,5 @@
 // ingestDocument.ts
-import { pool } from "../../../infrastructure/database/pool.js";
+import { getPool } from "../../../infrastructure/database/pool.js";
 import { embedText } from "../../../config/providers.js";
 import { extractText } from "./extractText.js";
 import { cleanText } from "./cleanText.js";
@@ -12,11 +12,14 @@ export interface IngestResult {
   chunkCount: number;
 }
 
+
 export async function ingestDocument(
   sessionId: string,
   filename: string,
   buffer: Buffer,
 ): Promise<IngestResult> {
+    const pool = await getPool();
+  
   const text = cleanText(await extractText(buffer));
   const chunks = chunkSections(detectSections(text));
   if (chunks.length === 0)

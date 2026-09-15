@@ -13,7 +13,7 @@ export function getUrls() {
     local: {
       backendUrl: process.env.LOCAL_BACKEND_URL,
       frontendUrl: process.env.LOCAL_FRONTEND_URL,
-      databaseUrl: process.env.LOCAL_DATABASE_URL
+      databaseUrl: process.env.DATABASE_URL
     },
     remote: {
         backendUrl: process.env.REMOTE_BACKEND_URL,
